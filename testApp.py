@@ -4,6 +4,7 @@ from tkinter import scrolledtext, Frame, Tk, BOTH, Text, Menu, END
 from tkinter import ttk, filedialog
 from tkinter.ttk import Frame, Button
 from tkinter import messagebox as mbox
+import docx as dc
 
 """ Бизнес_логика приложения"""
 
@@ -16,6 +17,11 @@ def getText():
     context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': type_ed_prog_get}
     doc.render(context)
     doc.save("RPD_final.docx")
+    document = dc.Document("RPD_final.docx")
+    fullText = []
+    for para in document.paragraphs:
+        fullText.append(para.text)
+    mainText.insert('1.0', fullText)
 
 
 def deleteText():
@@ -25,7 +31,7 @@ def deleteText():
 def newWindow():
     window = Tk()
     window.title("Генератор Рабочей программы дисциплины")
-    window.geometry('1000x500')
+    window.geometry('600x600')
 
 
 def onOpen():
@@ -45,9 +51,26 @@ window.geometry('600x600')
 # создание меню
 menubar = Menu(window.master)
 window.config(menu=menubar)
+
 fileMenu = Menu(menubar)
 fileMenu.add_command(label="Открыть файл", command=onOpen)
+
+menubar_label = [
+    "Цели и задачи освоения дисциплины",
+    "Место дисциплины в структуре ОП",
+    "Планируемые результаты обучения по дисциплине",
+    "Структура дисциплины и распределение её трудоёмкости"
+]
+
+description_menu_bar = Menu(menubar)
+description_menu_bar.add_command(label="Цели и задачи освоения дисциплины", command=newWindow)
+description_menu_bar.add_command(label=menubar_label[0], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[1], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[2], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[3], command=newWindow)
+
 menubar.add_cascade(label="Файл", menu=fileMenu)
+menubar.add_cascade(label="Содержание РПД", menu=description_menu_bar)
 
 # Создание Рамки с лэйблами и текстовыми полями
 frm_form = Frame(relief=SUNKEN, borderwidth=3)

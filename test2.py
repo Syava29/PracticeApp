@@ -1,48 +1,22 @@
-from tkinter import Frame, Tk, BOTH, Text, Menu, END
-from tkinter import filedialog
+import tkinter as Tk
 
-class Example(Frame):
-
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        self.master.title("Окно для выбора файла")
-        self.pack(fill=BOTH, expand=1)
-
-        menubar = Menu(self.master)
-        self.master.config(menu=menubar)
-
-        fileMenu = Menu(menubar)
-        fileMenu.add_command(label="Открыть", command=self.onOpen)
-        menubar.add_cascade(label="Файл", menu=fileMenu)
-
-        self.txt = Text(self)
-        self.txt.pack(fill=BOTH, expand=1)
-
-    def onOpen(self):
-        ftypes = [('Python файлы', '*.py'), ('Все файлы', '*')]
-        dlg = filedialog.Open(self, filetypes = ftypes)
-        fl = dlg.show()
-
-        if fl != '':
-            text = self.readFile(fl)
-            self.txt.insert(END, text)
-
-    def readFile(self, filename):
-        with open(filename, "r") as f:
-            text = f.read()
-
-        return text
+root = Tk.Tk()
+root.geometry('300x300')
 
 
-def main():
-    root = Tk()
-    ex = Example()
-    root.geometry("300x250+300+300")
-    root.mainloop()
+def resize_it(event):
+    frame.configure(width=event.width / 3, height=event.height / 2)
+    frame1.configure(width=event.width / 3 * 2, height=event.height / 2)
+    root.configure(width=event.width, height=event.height)
 
 
-if __name__ == '__main__':
-    main()
+frame = Tk.Frame(root, bg='red')
+frame.pack(side='left', expand=True, fill=Tk.BOTH)
+frame.grid_propagate(0)
+
+frame1 = Tk.Frame(root, bg='blue')
+frame1.pack(side='left', expand=True, fill=Tk.BOTH)
+frame1.grid_propagate(0)
+
+root.bind('<Configure>', resize_it)
+root.mainloop()
