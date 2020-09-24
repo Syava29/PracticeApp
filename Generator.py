@@ -1,10 +1,10 @@
-from docxtpl import DocxTemplate
 from tkinter import *
-from tkinter import scrolledtext, Frame, Tk, BOTH, Text, Menu, END
+from tkinter import Tk, Text, Menu, END
 from tkinter import ttk, filedialog
 from tkinter.ttk import Frame, Button
-from tkinter import messagebox as mbox
+from tkinter import messagebox as mb
 import docx as dc
+from docxtpl import DocxTemplate
 
 """ Бизнес_логика приложения"""
 
@@ -21,6 +21,7 @@ def getText():
     fullText = []
     for para in document.paragraphs:
         fullText.append(para.text)
+    mb.showinfo("Внимание", "Титульный лист сформирован")
     mainText.insert('1.0', fullText)
 
 
@@ -44,9 +45,42 @@ def onOpen():
 
 
 """ Визуализация """
+class MainWidow:
+    def __init__(self, width, height, title="Генератор Рабочей программы дисциплины", resizable=(False, False), icon=None):
+        self.root = Tk()
+        self.root.title(title)
+        self.root.geometry(f"{width}x{height}+200+300")
+        self.root.resizable(resizable[0], resizable[1])
+        if icon:
+            self.root.iconbitmap(icon)
+    def run(self):
+        self.root.mainloop()
+
+
+if __name__ == "__main__":
+    window = MainWidow(500, 500, "TKINTER")
+    window.run()
+
+
+
+
+
+
 window = Tk()
 window.title("Генератор Рабочей программы дисциплины")
-window.geometry('600x600')
+
+
+w = window.winfo_screenwidth() # ширина экрана
+h = window.winfo_screenheight() # высота экрана
+w = w//2 # середина экрана
+h = h//2
+w = w - 300 # смещение от середины
+h = h - 300
+window.geometry('600x600+{}+{}'.format(w, h))
+window.resizable(False, False)
+
+
+
 
 # создание меню
 menubar = Menu(window.master)
