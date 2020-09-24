@@ -5,6 +5,7 @@ from tkinter.ttk import Frame, Button
 from tkinter import messagebox as mb
 import docx as dc
 from docxtpl import DocxTemplate
+from SecondWindow import SecondWin
 
 """ Бизнес_логика приложения"""
 
@@ -33,6 +34,15 @@ def newWindow():
     window = Tk()
     window.title("Генератор Рабочей программы дисциплины")
     window.geometry('600x600')
+    menubar = Menu(window.master)
+    window.config(menu=menubar)
+
+    fileMenu = Menu(menubar)
+    fileMenu.add_command(label="Открыть файл", command=onOpen)
+
+
+def create_new_win():
+    SecondWin(window)
 
 
 def onOpen():
@@ -45,42 +55,17 @@ def onOpen():
 
 
 """ Визуализация """
-class MainWidow:
-    def __init__(self, width, height, title="Генератор Рабочей программы дисциплины", resizable=(False, False), icon=None):
-        self.root = Tk()
-        self.root.title(title)
-        self.root.geometry(f"{width}x{height}+200+300")
-        self.root.resizable(resizable[0], resizable[1])
-        if icon:
-            self.root.iconbitmap(icon)
-    def run(self):
-        self.root.mainloop()
-
-
-if __name__ == "__main__":
-    window = MainWidow(500, 500, "TKINTER")
-    window.run()
-
-
-
-
-
-
 window = Tk()
 window.title("Генератор Рабочей программы дисциплины")
 
-
-w = window.winfo_screenwidth() # ширина экрана
-h = window.winfo_screenheight() # высота экрана
-w = w//2 # середина экрана
-h = h//2
-w = w - 300 # смещение от середины
+w = window.winfo_screenwidth()  # ширина экрана
+h = window.winfo_screenheight()  # высота экрана
+w = w // 2  # середина экрана
+h = h // 2
+w = w - 300  # смещение от середины
 h = h - 300
 window.geometry('600x600+{}+{}'.format(w, h))
 window.resizable(False, False)
-
-
-
 
 # создание меню
 menubar = Menu(window.master)
@@ -97,7 +82,7 @@ menubar_label = [
 ]
 
 description_menu_bar = Menu(menubar)
-description_menu_bar.add_command(label="Цели и задачи освоения дисциплины", command=newWindow)
+description_menu_bar.add_command(label="Цели и задачи освоения дисциплины", command=create_new_win)
 description_menu_bar.add_command(label=menubar_label[0], command=newWindow)
 description_menu_bar.add_command(label=menubar_label[1], command=newWindow)
 description_menu_bar.add_command(label=menubar_label[2], command=newWindow)
@@ -177,7 +162,7 @@ btn_submit.pack(side=LEFT, padx=10, ipadx=10)
 btn_clear = Button(master=frm_buttons, text="Отчистить", command=deleteText)
 btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
-btn_nw = Button(master=frm_buttons, text="New", command=newWindow)
+btn_nw = Button(master=frm_buttons, text="New", command=create_new_win)
 btn_nw.pack(side=LEFT, padx=10, ipadx=10)
 
 mainText = Text(window)
