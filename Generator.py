@@ -42,7 +42,7 @@ def newWindow():
 
 
 def create_new_win():
-    SecondWin(window)
+    SecondWin(500, 500, "TKINTER")
 
 
 def onOpen():
