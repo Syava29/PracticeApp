@@ -1,8 +1,11 @@
 from tkinter import *
-from tkinter import Tk, Text, END
+from tkinter import Tk, Text, END, filedialog
 from tkinter import messagebox as mb
 from tkinter import ttk
 from tkinter.ttk import Frame, Button
+from PIL import Image as PilImage
+from PIL import ImageTk
+from tkinter.scrolledtext import ScrolledText
 
 import docx as dc
 from docxtpl import DocxTemplate
@@ -11,7 +14,7 @@ from second_window import SecondWindow
 
 
 class MainWindow:
-    def __init__(self, width, height, title="Генератор Рабочей программы дисциплины", resizable=(False, False),
+    def __init__(self, width, height, title, resizable=(False, False),
                  icon=None):
         self.root = Tk()
         self.root.title(title)
@@ -20,9 +23,37 @@ class MainWindow:
         if icon:
             self.root.iconbitmap(icon)
 
+        img = PilImage.open('addimg.png')
+        img = img.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image = ImageTk.PhotoImage(img)
 
+        self.menubar = Menu(self.root)
+        self.root.config(menu=self.menubar)
 
-        self.frm_form = Frame(relief=SUNKEN, borderwidth=3)
+        self.fileMenu = Menu(self.menubar)
+        self.fileMenu.add_command(label="Открыть файл", command=self.onOpen)
+
+        menubar_label = [
+            "Цели и задачи освоения дисциплины",
+            "Место дисциплины в структуре ОП",
+            "Планируемые результаты обучения по дисциплине",
+            "Структура дисциплины и распределение её трудоёмкости"
+        ]
+
+        description_menu_bar = Menu(self.menubar)
+        description_menu_bar.add_command(label=menubar_label[0], command=lambda: self.create_new_win(
+            600, 600))
+        description_menu_bar.add_command(label=menubar_label[1], command=lambda: self.create_new_win(
+            600, 600))
+        description_menu_bar.add_command(label=menubar_label[2], command=lambda: self.create_new_win(
+            600, 600))
+        description_menu_bar.add_command(label=menubar_label[3], command=lambda: self.create_new_win(
+            600, 600))
+
+        self.menubar.add_cascade(label="Файл", menu=self.fileMenu)
+        self.menubar.add_cascade(label="Содержание РПД", menu=description_menu_bar)
+
+        self.frm_form = LabelFrame(relief=SUNKEN, borderwidth=3, text="Титульный лист")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
 
         self.labels = [
@@ -35,20 +66,20 @@ class MainWindow:
         ]
 
         # Создает ярлык с текстом из списка ярлыков.
-        self.label = Label(master=self.frm_form, text=self.labels[0])
-        self.label_1 = Label(master=self.frm_form, text=self.labels[1])
-        self.label_2 = Label(master=self.frm_form, text=self.labels[2])
-        self.label_3 = Label(master=self.frm_form, text=self.labels[3])
-        self.label_4 = Label(master=self.frm_form, text=self.labels[4])
-        self.label_5 = Label(master=self.frm_form, text=self.labels[5])
+        self.label = Label(self.frm_form, text=self.labels[0])
+        self.label_1 = Label(self.frm_form, text=self.labels[1])
+        self.label_2 = Label(self.frm_form, text=self.labels[2])
+        self.label_3 = Label(self.frm_form, text=self.labels[3])
+        self.label_4 = Label(self.frm_form, text=self.labels[4])
+        self.label_5 = Label(self.frm_form, text=self.labels[5])
 
         # Создает текстовое поле которая соответствует ярлыку.
-        self.entry = Entry(master=self.frm_form, width=50)
+        self.entry = Entry(self.frm_form, width=50)
         # entry_1 = Entry(master=frm_form, width=50)
         # entry_2 = Entry(master=frm_form, width=50)
         # entry_3 = Entry(master=frm_form, width=50)
-        self.entry_4 = Entry(master=self.frm_form, width=50)
-        self.entry_5 = Entry(master=self.frm_form, width=50)
+        self.entry_4 = Entry(self.frm_form, width=50)
+        self.entry_5 = Entry(self.frm_form, width=50)
         # Использует менеджер геометрии grid для размещения ярлыков и
         # текстовых полей в строку, чей индекс равен idx.
         self.label.grid(row=1, column=0, sticky="e")
@@ -86,16 +117,17 @@ class MainWindow:
         self.frm_buttons = Frame()
         self.frm_buttons.pack(fill=X, ipadx=5, ipady=5)
 
-        self.btn_submit = Button(master=self.frm_buttons, text="Добавить", command=self.getText)
+        self.btn_submit = Button(self.frm_buttons, text="Добавить", image=self.photo_image, compound=LEFT,
+                                  command=lambda: self.getText())
         self.btn_submit.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.btn_clear = Button(master=self.frm_buttons, text="Отчистить", command=self.deleteText)
+        self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.deleteText)
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.btn_nw = Button(master=self.frm_buttons, text="New", command=self.create_new_win)
+        self.btn_nw = Button(self.frm_buttons, text="New", command=lambda: self.create_new_win(600, 600))
         self.btn_nw.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.mainText = Text(self.root)
+        self.mainText = ScrolledText(self.root, relief=SUNKEN, bd=5, font=("Times New Roman", 11), wrap=WORD)
         self.mainText.pack()
 
         self.scroll = Scrollbar(command=self.mainText.yview)
@@ -106,40 +138,44 @@ class MainWindow:
         self.label = Label()
         self.label.pack(side=LEFT)
 
-
-
-
     def run(self):
         self.draw_widgets()
         self.root.mainloop()
 
     def draw_widgets(self):
         self.label.pack(anchor=CENTER)
-        #self.menubar
+        # self.menubar
 
     def create_new_win(self, width, height, title="Генератор", resizable=(False, False), icon=None):
         SecondWindow(self.root, width, height, title, resizable, icon)
 
+    def onOpen(self):
+        ftypes = [('py файлы', '*.py'), ('Все файлы', '*')]
+        dlg = filedialog.Open(self.root, filetypes=ftypes)
+        fl = dlg.show()
+        fll = open(fl)
+        fl2 = fll.readline()
+        self.mainText.insert(1.0, fl2)
+
     def getText(self):
-        self.prepod_get = self.entry.get()
-        self.discip_get = self.combobox_discip.get()
-        self.type_ed_prog_get = self.combobox_ed_prog.get()
-        self.doc = DocxTemplate("RPD_test.docx")
-        self.context = {'prepod': self.prepod_get, 'discip': self.discip_get, 'type_ed_prog': self.type_ed_prog_get}
-        self.doc.render(self.context)
-        self.doc.save("RPD_final.docx")
-        self.document = dc.Document("RPD_final.docx")
-        self.fullText = []
-        for para in self.document.paragraphs:
-            self.fullText.append(para.text)
+        prepod_get = self.entry.get()
+        discip_get = self.combobox_discip.get()
+        stype_ed_prog_get = self.combobox_ed_prog.get()
+        doc = DocxTemplate("RPD_test.docx")
+        context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': stype_ed_prog_get}
+        doc.render(context)
+        doc.save("RPD_final.docx")
+        document = dc.Document("RPD_final.docx")
+        full_text = []
+        for para in document.paragraphs:
+            full_text.append(para.text)
         mb.showinfo("Внимание", "Титульный лист сформирован")
-        self.mainText.insert('1.0', self.fullText)
+        self.mainText.insert('1.0', full_text)
 
     def deleteText(self):
         self.entry.delete(0, END)
 
-if __name__ == "__main__":
-    window = MainWindow(600, 600, "Tkinter")
 
-    window.create_new_win(600, 600)
+if __name__ == "__main__":
+    window = MainWindow(600, 600, "Генератор рабочей программы дисциплины")
     window.run()
