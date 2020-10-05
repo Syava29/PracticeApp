@@ -20,6 +20,7 @@ class MainWindow:
         self.root.title(title)
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
+        self.root.config(bg="#1f4b99")
         if icon:
             self.root.iconbitmap(icon)
 

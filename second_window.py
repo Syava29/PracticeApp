@@ -16,6 +16,7 @@ class SecondWindow:
         self.root.title(title)
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
+        self.root.config(bg="#1f4b99")
         if icon:
             self.root.iconbitmap(icon)
 
@@ -47,8 +48,10 @@ class SecondWindow:
         self.label_1.grid(row=2, column=0, sticky="e")
         # self.entry.grid(row=1, column=1)
         # self.entry2.grid(row=2, column=1)
-        self.text_edit = ScrolledText(self.frm_form, width=45, height=10, font=("Times New Roman", 11), wrap=WORD).grid(row=1, column=1)
-        self.text_edit2 = ScrolledText(self.frm_form, width=45, height=10, font=("Times New Roman", 11), wrap=WORD).grid(row=2, column=1)
+        self.text_edit = ScrolledText(self.frm_form, width=45, height=10, font=("Times New Roman", 11), wrap=WORD)
+        self.text_edit.grid(row=1, column=1)
+        self.text_edit2 = ScrolledText(self.frm_form, width=45, height=10, font=("Times New Roman", 11), wrap=WORD)
+        self.text_edit2.grid(row=2, column=1)
         # self.grab_focis()
 
         self.frm_buttons = Frame(self.root)
@@ -61,8 +64,9 @@ class SecondWindow:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить")
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
+
     def get_text(self):
-        prepod_get = self.text_edit
+        prepod_get = self.text_edit.get("1.0", END)
         #discip_get = self.combobox_discip.get()
         #stype_ed_prog_get = self.combobox_ed_prog.get()
         doc = DocxTemplate("RPD_test.docx")
@@ -74,7 +78,9 @@ class SecondWindow:
         for para in document.paragraphs:
             full_text.append(para.text)
         mb.showinfo("Внимание", "Титульный лист сформирован")
-        self.mainText.insert('1.0', full_text)
+        #self.mainText.insert('1.0', full_text)
+
+
 
     # Фокусировка окна
     # def grab_focis(self):
