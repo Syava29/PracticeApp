@@ -1,9 +1,11 @@
-from docxtpl import DocxTemplate
 from tkinter import *
-from tkinter import scrolledtext, Frame, Tk, BOTH, Text, Menu, END
+from tkinter import Tk, Text, Menu, END
 from tkinter import ttk, filedialog
 from tkinter.ttk import Frame, Button
-from tkinter import messagebox as mbox
+from tkinter import messagebox as mb
+import docx as dc
+from docxtpl import DocxTemplate
+from SecondWindow import SecondWin
 
 """ Бизнес_логика приложения"""
 
@@ -16,6 +18,12 @@ def getText():
     context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': type_ed_prog_get}
     doc.render(context)
     doc.save("RPD_final.docx")
+    document = dc.Document("RPD_final.docx")
+    fullText = []
+    for para in document.paragraphs:
+        fullText.append(para.text)
+    mb.showinfo("Внимание", "Титульный лист сформирован")
+    mainText.insert('1.0', fullText)
 
 
 def deleteText():
@@ -25,7 +33,16 @@ def deleteText():
 def newWindow():
     window = Tk()
     window.title("Генератор Рабочей программы дисциплины")
-    window.geometry('1000x500')
+    window.geometry('600x600')
+    menubar = Menu(window.master)
+    window.config(menu=menubar)
+
+    fileMenu = Menu(menubar)
+    fileMenu.add_command(label="Открыть файл", command=onOpen)
+
+
+def create_new_win():
+    SecondWin(500, 500, "TKINTER")
 
 
 def onOpen():
@@ -40,14 +57,39 @@ def onOpen():
 """ Визуализация """
 window = Tk()
 window.title("Генератор Рабочей программы дисциплины")
-window.geometry('600x600')
+
+w = window.winfo_screenwidth()  # ширина экрана
+h = window.winfo_screenheight()  # высота экрана
+w = w // 2  # середина экрана
+h = h // 2
+w = w - 300  # смещение от середины
+h = h - 300
+window.geometry('600x600+{}+{}'.format(w, h))
+window.resizable(False, False)
 
 # создание меню
 menubar = Menu(window.master)
 window.config(menu=menubar)
+
 fileMenu = Menu(menubar)
 fileMenu.add_command(label="Открыть файл", command=onOpen)
+
+menubar_label = [
+    "Цели и задачи освоения дисциплины",
+    "Место дисциплины в структуре ОП",
+    "Планируемые результаты обучения по дисциплине",
+    "Структура дисциплины и распределение её трудоёмкости"
+]
+
+description_menu_bar = Menu(menubar)
+description_menu_bar.add_command(label="Цели и задачи освоения дисциплины", command=create_new_win)
+description_menu_bar.add_command(label=menubar_label[0], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[1], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[2], command=newWindow)
+description_menu_bar.add_command(label=menubar_label[3], command=newWindow)
+
 menubar.add_cascade(label="Файл", menu=fileMenu)
+menubar.add_cascade(label="Содержание РПД", menu=description_menu_bar)
 
 # Создание Рамки с лэйблами и текстовыми полями
 frm_form = Frame(relief=SUNKEN, borderwidth=3)
@@ -120,7 +162,7 @@ btn_submit.pack(side=LEFT, padx=10, ipadx=10)
 btn_clear = Button(master=frm_buttons, text="Отчистить", command=deleteText)
 btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
-btn_nw = Button(master=frm_buttons, text="New", command=newWindow)
+btn_nw = Button(master=frm_buttons, text="New", command=create_new_win)
 btn_nw.pack(side=LEFT, padx=10, ipadx=10)
 
 mainText = Text(window)
