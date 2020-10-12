@@ -66,14 +66,15 @@ class SecondWindow:
 
 
     def get_text(self):
-        prepod_get = self.text_edit.get("1.0", END)
+        text_get = self.text_edit.get("1.0", END)
+        text_get2 = self.text_edit2.get("1.0", END)
         #discip_get = self.combobox_discip.get()
         #stype_ed_prog_get = self.combobox_ed_prog.get()
-        doc = DocxTemplate("RPD_test.docx")
-        context = {'prepod': prepod_get, 'discip': "test", 'type_ed_prog': "test"}
+        doc = DocxTemplate("RPD1.docx")
+        context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}"}
         doc.render(context)
-        doc.save("RPD_final.docx")
-        document = dc.Document("RPD_final.docx")
+        doc.save("RPD2.docx")
+        document = dc.Document("RPD2.docx")
         full_text = []
         for para in document.paragraphs:
             full_text.append(para.text)

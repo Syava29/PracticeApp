@@ -11,6 +11,9 @@ import docx as dc
 from docxtpl import DocxTemplate
 
 from second_window import SecondWindow
+from window3 import Window3
+from window4 import Window4
+
 
 
 class MainWindow:
@@ -44,9 +47,9 @@ class MainWindow:
         description_menu_bar = Menu(self.menubar)
         description_menu_bar.add_command(label=menubar_label[0], command=lambda: self.create_new_win(
             600, 600))
-        description_menu_bar.add_command(label=menubar_label[1], command=lambda: self.create_new_win(
+        description_menu_bar.add_command(label=menubar_label[1], command=lambda: self.create_new_win2(
             600, 600))
-        description_menu_bar.add_command(label=menubar_label[2], command=lambda: self.create_new_win(
+        description_menu_bar.add_command(label=menubar_label[2], command=lambda: self.create_new_win4(
             600, 600))
         description_menu_bar.add_command(label=menubar_label[3], command=lambda: self.create_new_win(
             600, 600))
@@ -150,6 +153,12 @@ class MainWindow:
     def create_new_win(self, width, height, title="Генератор", resizable=(False, False), icon=None):
         SecondWindow(self.root, width, height, title, resizable, icon)
 
+    def create_new_win2(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+        Window3(self.root, width, height, title, resizable, icon)
+
+    def create_new_win4(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+        Window4(self.root, width, height, title, resizable, icon)
+
     def onOpen(self):
         ftypes = [('py файлы', '*.py'), ('Все файлы', '*')]
         dlg = filedialog.Open(self.root, filetypes=ftypes)
@@ -162,16 +171,19 @@ class MainWindow:
         prepod_get = self.entry.get()
         discip_get = self.combobox_discip.get()
         stype_ed_prog_get = self.combobox_ed_prog.get()
+        form_ed = self.combobox_form_ed.get()
         doc = DocxTemplate("RPD_test.docx")
-        context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': stype_ed_prog_get}
+        context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': stype_ed_prog_get, 'form_ed': form_ed,
+                   'mesto_discip': "{{mesto_discip}}", 'task': "{{task}}", 'target': "{{target}}"}
         doc.render(context)
-        doc.save("RPD_final.docx")
-        document = dc.Document("RPD_final.docx")
+        doc.save("RPD1.docx")
+        document = dc.Document("RPD1.docx")
         full_text = []
         for para in document.paragraphs:
             full_text.append(para.text)
         mb.showinfo("Внимание", "Титульный лист сформирован")
         self.mainText.insert('1.0', full_text)
+
 
     def deleteText(self):
         self.entry.delete(0, END)
