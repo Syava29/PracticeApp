@@ -64,12 +64,11 @@ class SecondWindow:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить")
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
-
     def get_text(self):
         text_get = self.text_edit.get("1.0", END)
         text_get2 = self.text_edit2.get("1.0", END)
-        #discip_get = self.combobox_discip.get()
-        #stype_ed_prog_get = self.combobox_ed_prog.get()
+        # discip_get = self.combobox_discip.get()
+        # stype_ed_prog_get = self.combobox_ed_prog.get()
         doc = DocxTemplate("RPD1.docx")
         context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}"}
         doc.render(context)
@@ -79,9 +78,7 @@ class SecondWindow:
         for para in document.paragraphs:
             full_text.append(para.text)
         mb.showinfo("Внимание", "Титульный лист сформирован")
-        #self.mainText.insert('1.0', full_text)
-
-
+        # self.mainText.insert('1.0', full_text)
 
     # Фокусировка окна
     # def grab_focis(self):
