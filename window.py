@@ -13,7 +13,7 @@ from docxtpl import DocxTemplate
 from second_window import SecondWindow
 from window3 import Window3
 from window4 import Window4
-
+from window5 import Window5
 
 
 class MainWindow:
@@ -35,7 +35,7 @@ class MainWindow:
         self.root.config(menu=self.menubar)
 
         self.fileMenu = Menu(self.menubar)
-        self.fileMenu.add_command(label="Открыть файл", command=self.onOpen)
+        self.fileMenu.add_command(label="Открыть файл", command=self.on_open)
 
         menubar_label = [
             "Цели и задачи освоения дисциплины",
@@ -51,7 +51,7 @@ class MainWindow:
             600, 600))
         description_menu_bar.add_command(label=menubar_label[2], command=lambda: self.create_new_win4(
             600, 600))
-        description_menu_bar.add_command(label=menubar_label[3], command=lambda: self.create_new_win(
+        description_menu_bar.add_command(label=menubar_label[3], command=lambda: self.create_new_win5(
             600, 600))
 
         self.menubar.add_cascade(label="Файл", menu=self.fileMenu)
@@ -82,8 +82,8 @@ class MainWindow:
         # entry_1 = Entry(master=frm_form, width=50)
         # entry_2 = Entry(master=frm_form, width=50)
         # entry_3 = Entry(master=frm_form, width=50)
-        self.entry_4 = Entry(self.frm_form, width=50)
-        self.entry_5 = Entry(self.frm_form, width=50)
+        # self.entry_4 = Entry(self.frm_form, width=50)
+        # self.entry_5 = Entry(self.frm_form, width=50)
         # Использует менеджер геометрии grid для размещения ярлыков и
         # текстовых полей в строку, чей индекс равен idx.
         self.label.grid(row=1, column=0, sticky="e")
@@ -97,8 +97,8 @@ class MainWindow:
         # entry_1.grid(row=2, column=1)
         # entry_2.grid(row=3, column=1)
         # entry_3.grid(row=4, column=1)
-        self.entry_4.grid(row=5, column=1)
-        self.entry_5.grid(row=6, column=1)
+        # self.entry_4.grid(row=5, column=1)
+        # self.entry_5.grid(row=6, column=1)
 
         self.combobox_discip = ttk.Combobox(self.frm_form, values=[
             "Программирование",
@@ -118,18 +118,21 @@ class MainWindow:
             "заочная"])
         self.combobox_form_ed.grid(row=4, column=1)
 
+        self.combobox_naprav_podgotovki = ttk.Combobox(self.frm_form, values=["09.03.03 Прикладная информатика"])
+        self.combobox_naprav_podgotovki.grid(row=5, column=1)
+
+        self.combobox_profil = ttk.Combobox(self.frm_form, values=["Интеллектуальная обработка данных"])
+        self.combobox_profil.grid(row=6, column=1)
+
         self.frm_buttons = Frame()
         self.frm_buttons.pack(fill=X, ipadx=5, ipady=5)
 
         self.btn_submit = Button(self.frm_buttons, text="Добавить", image=self.photo_image, compound=LEFT,
-                                  command=lambda: self.getText())
+                                 command=lambda: self.get_text())
         self.btn_submit.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.deleteText)
+        self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.delete_text())
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
-
-        self.btn_nw = Button(self.frm_buttons, text="New", command=lambda: self.create_new_win(600, 600))
-        self.btn_nw.pack(side=LEFT, padx=10, ipadx=10)
 
         self.mainText = ScrolledText(self.root, relief=SUNKEN, bd=5, font=("Times New Roman", 11), wrap=WORD)
         self.mainText.pack()
@@ -159,7 +162,10 @@ class MainWindow:
     def create_new_win4(self, width, height, title="Генератор", resizable=(False, False), icon=None):
         Window4(self.root, width, height, title, resizable, icon)
 
-    def onOpen(self):
+    def create_new_win5(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+        Window5(self.root, width, height, title, resizable, icon)
+
+    def on_open(self):
         ftypes = [('py файлы', '*.py'), ('Все файлы', '*')]
         dlg = filedialog.Open(self.root, filetypes=ftypes)
         fl = dlg.show()
@@ -167,14 +173,19 @@ class MainWindow:
         fl2 = fll.readline()
         self.mainText.insert(1.0, fl2)
 
-    def getText(self):
+    def get_text(self):
         prepod_get = self.entry.get()
         discip_get = self.combobox_discip.get()
         stype_ed_prog_get = self.combobox_ed_prog.get()
         form_ed = self.combobox_form_ed.get()
+        naprav_podgotovki = self.combobox_naprav_podgotovki.get()
+        profil = self.combobox_profil.get()
+
         doc = DocxTemplate("RPD_test.docx")
         context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': stype_ed_prog_get, 'form_ed': form_ed,
-                   'mesto_discip': "{{mesto_discip}}", 'task': "{{task}}", 'target': "{{target}}"}
+                   'profil': profil, 'naprav_podgotovki': naprav_podgotovki, 'mesto_discip': "{{mesto_discip}}", 'task': "{{task}}",
+                   'target': "{{target}}", 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
+                   'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
         doc.render(context)
         doc.save("RPD1.docx")
         document = dc.Document("RPD1.docx")
@@ -184,8 +195,7 @@ class MainWindow:
         mb.showinfo("Внимание", "Титульный лист сформирован")
         self.mainText.insert('1.0', full_text)
 
-
-    def deleteText(self):
+    def delete_text(self):
         self.entry.delete(0, END)
 
 
