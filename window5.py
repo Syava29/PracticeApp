@@ -9,7 +9,7 @@ from tkinter.scrolledtext import ScrolledText
 import docx as dc
 
 
-class Window3:
+class Window5:
     def __init__(self, parent, width, height, title="Генератор Рабочей программы дисциплины", resizable=(False, False),
                  icon=r"main.ico"):
         self.root = Toplevel(parent)
@@ -24,7 +24,7 @@ class Window3:
         if icon:
             self.root.iconbitmap(icon)
 
-        self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Место дисциплины в структуре ОП")
+        self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Структура дисциплины и распределение её трудоёмкости")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
         self.text_edit = ScrolledText(self.frm_form, width=78, height=25, font=("Times New Roman", 11), wrap=WORD)
         self.text_edit.grid(row=1, column=1)

@@ -70,7 +70,8 @@ class SecondWindow:
         # discip_get = self.combobox_discip.get()
         # stype_ed_prog_get = self.combobox_ed_prog.get()
         doc = DocxTemplate("RPD1.docx")
-        context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}"}
+        context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}", 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
+                   'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
         doc.render(context)
         doc.save("RPD2.docx")
         document = dc.Document("RPD2.docx")
