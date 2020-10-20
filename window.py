@@ -2,10 +2,12 @@ from tkinter import *
 from tkinter import Tk, Text, END, filedialog
 from tkinter import messagebox as mb
 from tkinter import ttk
+import time, threading
 from tkinter.ttk import Frame, Button
 from PIL import Image as PilImage
 from PIL import ImageTk
 from tkinter.scrolledtext import ScrolledText
+import os
 
 import docx as dc
 from docxtpl import DocxTemplate
@@ -24,12 +26,26 @@ class MainWindow:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.root.config(bg="#1f4b99")
-        if icon:
-            self.root.iconbitmap(icon)
 
-        img = PilImage.open('addimg.png')
+        self.root.iconbitmap('images/osu2.ico')
+
+        img = PilImage.open('images/add_png.png')
         img = img.resize((18, 18), PilImage.ANTIALIAS)
         self.photo_image = ImageTk.PhotoImage(img)
+
+        img2 = PilImage.open('images/download_png.png')
+        img2 = img2.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image2 = ImageTk.PhotoImage(img2)
+
+        img3 = PilImage.open('images/help_png.png')
+        img3 = img3.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image3 = ImageTk.PhotoImage(img3)
+
+        self.data_file = open("data/data1.txt", "w+")
+        self.text_data = self.data_file.read()
+        self.data_file.close()
+
+        self.counter1 = 0
 
         self.menubar = Menu(self.root)
         self.root.config(menu=self.menubar)
@@ -62,11 +78,11 @@ class MainWindow:
 
         self.labels = [
             "ФИО:",
-            "Дисциплина:",
-            "Тип образовательной программы:",
-            "Форма обучения:",
-            "Направление подготовки:",
-            "Профиль:",
+            "Дисциплина: *",
+            "Тип образовательной программы: *",
+            "Форма обучения: *",
+            "Направление подготовки: *",
+            "Профиль: *",
         ]
 
         # Создает ярлык с текстом из списка ярлыков.
@@ -124,6 +140,7 @@ class MainWindow:
         self.combobox_profil = ttk.Combobox(self.frm_form, values=["Интеллектуальная обработка данных"])
         self.combobox_profil.grid(row=6, column=1)
 
+        # основные кнопки
         self.frm_buttons = Frame()
         self.frm_buttons.pack(fill=X, ipadx=5, ipady=5)
 
@@ -134,16 +151,50 @@ class MainWindow:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.delete_text())
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.mainText = ScrolledText(self.root, relief=SUNKEN, bd=5, font=("Times New Roman", 11), wrap=WORD)
-        self.mainText.pack()
+        self.btn_help = Button(self.frm_buttons, image=self.photo_image3, command=self.help_mb)
+        self.btn_help.pack(side=LEFT, padx=10, ipadx=10)
 
-        self.scroll = Scrollbar(command=self.mainText.yview)
-        self.scroll.pack(side=LEFT, fill=Y)
+        # Progressbar
+        # self.pb = ttk.Progressbar(self.frm_buttons, mode="determinate", maximum=100, value=0)
+        # self.pb.pack()
 
-        self.mainText.config(yscrollcommand=self.scroll.set)
+        # Добавленные рабочие программы
+
+        self.frm_form2 = LabelFrame(relief=SUNKEN, borderwidth=3, text="Добавленные рабочие программы")
+        self.frm_form2.pack(fill=X, ipadx=30, ipady=30, padx=10)
+
+        self.label_add_programm1 = Label(self.frm_form2, text='■').grid(row=1, column=0)
+        self.label_add_programm2 = Label(self.frm_form2, text='■').grid(row=2, column=0)
+        self.label_add_programm3 = Label(self.frm_form2, text='■').grid(row=3, column=0)
+        self.label_add_programm4 = Label(self.frm_form2, text='■').grid(row=4, column=0)
+
+        self.entry_add_programm1 = Entry(self.frm_form2, width=50)
+        self.entry_add_programm1.grid(row=1, column=1, pady=10, padx=10)
+        self.entry_add_programm2 = Entry(self.frm_form2, width=50)
+        self.entry_add_programm2.grid(row=2, column=1, pady=10, padx=10)
+        self.entry_add_programm3 = Entry(self.frm_form2, width=50)
+        self.entry_add_programm3.grid(row=3, column=1, pady=10, padx=10)
+        self.entry_add_programm4 = Entry(self.frm_form2, width=50)
+        self.entry_add_programm4.grid(row=4, column=1, pady=10, padx=10)
+
+        self.btn_add_programm1 = Button(self.frm_form2, image=self.photo_image2, command=self.open_word_file).grid(row=1, column=2)
+        self.btn_add_programm2 = Button(self.frm_form2, image=self.photo_image2).grid(row=2, column=2)
+        self.btn_add_programm3 = Button(self.frm_form2, image=self.photo_image2).grid(row=3, column=2)
+        self.btn_add_programm4 = Button(self.frm_form2, image=self.photo_image2).grid(row=4, column=2)
+        # основной текст
+
+        # self.mainText = ScrolledText(self.root, relief=SUNKEN, bd=5, font=("Times New Roman", 11), wrap=WORD)
+        # self.mainText.pack()
+
+        # self.scroll = Scrollbar(command=self.mainText.yview)
+        # self.scroll.pack(side=LEFT, fill=Y)
+
+        # self.mainText.config(yscrollcommand=self.scroll.set)
 
         self.label = Label()
         self.label.pack(side=LEFT)
+
+        self.entry_add_programm1.insert(0, self.text_data)
 
     def run(self):
         self.draw_widgets()
@@ -153,16 +204,16 @@ class MainWindow:
         self.label.pack(anchor=CENTER)
         # self.menubar
 
-    def create_new_win(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+    def create_new_win(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
         SecondWindow(self.root, width, height, title, resizable, icon)
 
-    def create_new_win2(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+    def create_new_win2(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
         Window3(self.root, width, height, title, resizable, icon)
 
-    def create_new_win4(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+    def create_new_win4(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
         Window4(self.root, width, height, title, resizable, icon)
 
-    def create_new_win5(self, width, height, title="Генератор", resizable=(False, False), icon=None):
+    def create_new_win5(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
         Window5(self.root, width, height, title, resizable, icon)
 
     def on_open(self):
@@ -181,22 +232,44 @@ class MainWindow:
         naprav_podgotovki = self.combobox_naprav_podgotovki.get()
         profil = self.combobox_profil.get()
 
-        doc = DocxTemplate("RPD_test.docx")
+        doc = DocxTemplate("data/RPD_test.docx")
         context = {'prepod': prepod_get, 'discip': discip_get, 'type_ed_prog': stype_ed_prog_get, 'form_ed': form_ed,
-                   'profil': profil, 'naprav_podgotovki': naprav_podgotovki, 'mesto_discip': "{{mesto_discip}}", 'task': "{{task}}",
+                   'profil': profil, 'naprav_podgotovki': naprav_podgotovki, 'mesto_discip': "{{mesto_discip}}",
+                   'task': "{{task}}",
                    'target': "{{target}}", 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
                    'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
         doc.render(context)
-        doc.save("RPD1.docx")
-        document = dc.Document("RPD1.docx")
-        full_text = []
-        for para in document.paragraphs:
-            full_text.append(para.text)
+        doc.save("data/RPD1.docx")
+
+        data_file = open("data/data1.txt", "w+")
+        str1 = data_file.read()
+        str1 = str1 + discip_get
+        data_file.write(str1)
+        data_file.close()
+
+        if self.counter1 == 0:
+            self.entry_add_programm1.insert(0, str1)
+        if self.counter1 == 1:
+            self.entry_add_programm2.insert(0, str1)
+        if self.counter1 == 2:
+            self.entry_add_programm3.insert(0, str1)
+        if self.counter1 == 3:
+            self.entry_add_programm4.insert(0, str1)
+
+        self.counter1 += 1
+
         mb.showinfo("Внимание", "Титульный лист сформирован")
-        self.mainText.insert('1.0', full_text)
+        # self.mainText.insert('1.0', full_text)
 
     def delete_text(self):
         self.entry.delete(0, END)
+
+    def help_mb(self):
+        mb.showinfo("Помощь", "Укажите год набора, направление подготовки, профиль и наименование дисциплины. "
+                              "Ниже показаны все добавленные вами рабочие программы")
+
+    def open_word_file(self):
+        os.startfile('готовые программы/рабочая программа.docx')
 
 
 if __name__ == "__main__":

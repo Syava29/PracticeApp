@@ -17,12 +17,15 @@ class SecondWindow:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.root.config(bg="#1f4b99")
-        if icon:
-            self.root.iconbitmap(icon)
+        self.root.iconbitmap('images/osu2.ico')
 
-        img = PilImage.open('addimg.png')
+        img = PilImage.open('images/add_png.png')
         img = img.resize((18, 18), PilImage.ANTIALIAS)
         self.photo_image = ImageTk.PhotoImage(img)
+
+        img3 = PilImage.open('images/help_png.png')
+        img3 = img3.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image3 = ImageTk.PhotoImage(img3)
 
         self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Цели и задачи освоения дисциплины")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
@@ -64,20 +67,19 @@ class SecondWindow:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить")
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
+        self.btn_help = Button(self.frm_buttons, image=self.photo_image3)
+        self.btn_help.pack(side=LEFT, padx=10, ipadx=10)
+
     def get_text(self):
         text_get = self.text_edit.get("1.0", END)
         text_get2 = self.text_edit2.get("1.0", END)
         # discip_get = self.combobox_discip.get()
         # stype_ed_prog_get = self.combobox_ed_prog.get()
-        doc = DocxTemplate("RPD1.docx")
+        doc = DocxTemplate("data/RPD1.docx")
         context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}", 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
                    'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
         doc.render(context)
-        doc.save("RPD2.docx")
-        document = dc.Document("RPD2.docx")
-        full_text = []
-        for para in document.paragraphs:
-            full_text.append(para.text)
+        doc.save("data/RPD2.docx")
         mb.showinfo("Внимание", "Титульный лист сформирован")
         # self.mainText.insert('1.0', full_text)
 

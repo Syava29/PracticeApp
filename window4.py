@@ -21,12 +21,16 @@ class Window4:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.root.config(bg="#1f4b99")
-        img = PilImage.open('addimg.png')
+
+        img = PilImage.open('images/add_png.png')
         img = img.resize((18, 18), PilImage.ANTIALIAS)
         self.photo_image = ImageTk.PhotoImage(img)
 
-        if icon:
-            self.root.iconbitmap(icon)
+        img3 = PilImage.open('images/help_png.png')
+        img3 = img3.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image3 = ImageTk.PhotoImage(img3)
+
+        self.root.iconbitmap('images/osu2.ico')
 
         self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Планируемые результаты обучения")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
@@ -55,6 +59,9 @@ class Window4:
         self.btn_clear = Button(self.frm_buttons, text="Сохранить", command=self.save_zuv)
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
+        self.btn_help = Button(self.frm_buttons, image=self.photo_image3)
+        self.btn_help.pack(side=LEFT, padx=10, ipadx=10)
+
         self.f_top = Frame(self.frm_form)  # frame для текста
         self.f_mid = Frame(self.frm_form)
         self.f_bot = Frame(self.frm_form)
@@ -73,7 +80,7 @@ class Window4:
         self.text_edit3.pack(side=LEFT)
         self.text_edit4.pack(side=LEFT)
 
-        self.filename1 = "Компетенции.xlsx"
+        self.filename1 = "data/Компетенции.xlsx"
 
         self.spisok_kod = []
         self.description_zuv = []
@@ -117,12 +124,12 @@ class Window4:
         self.add_zuv_spisok.append(self.description_zuv[self.combobox.current()])
 
     def save_zuv(self):
-        doc = DocxTemplate("RPD3.docx")
+        doc = DocxTemplate("data/RPD3.docx")
 
         context = {'description1': self.add_zuv_spisok[0], 'kod_komp1': self.add_kod_zuv_spisok[0],
                    'description2': self.add_zuv_spisok[1], 'kod_komp2': self.add_kod_zuv_spisok[1]}
         #context = {'description1': self.description_zuv[self.combobox.current()],
          #          'kod_komp1': self.spisok_kod[self.combobox.current()]}
         doc.render(context)
-        doc.save("RPD3.docx")
+        doc.save("готовые программы/рабочая программа.docx")
         mb.showinfo("Внимание", "Планируемые результаты обучения сформированы")

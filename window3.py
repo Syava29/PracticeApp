@@ -17,12 +17,16 @@ class Window3:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.root.config(bg="#1f4b99")
-        img = PilImage.open('addimg.png')
+
+        img = PilImage.open('images/add_png.png')
         img = img.resize((18, 18), PilImage.ANTIALIAS)
         self.photo_image = ImageTk.PhotoImage(img)
 
-        if icon:
-            self.root.iconbitmap(icon)
+        img3 = PilImage.open('images/help_png.png')
+        img3 = img3.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image3 = ImageTk.PhotoImage(img3)
+
+        self.root.iconbitmap('images/osu2.ico')
 
         self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Место дисциплины в структуре ОП")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
@@ -39,17 +43,16 @@ class Window3:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.delete_text)
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
+        self.btn_help = Button(self.frm_buttons, image=self.photo_image3)
+        self.btn_help.pack(side=LEFT, padx=10, ipadx=10)
+
     def get_text(self):
         text_get = self.text_edit.get("1.0", END)
-        doc = DocxTemplate("RPD2.docx")
+        doc = DocxTemplate("data/RPD2.docx")
         context = {'mesto_discip': text_get, 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
                    'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
         doc.render(context)
-        doc.save("RPD3.docx")
-        document = dc.Document("RPD3.docx")
-        full_text = []
-        for para in document.paragraphs:
-            full_text.append(para.text)
+        doc.save("data/RPD3.docx")
         mb.showinfo("Внимание", "Титульный лист сформирован")
         # self.mainText.insert('1.0', full_text)
 
