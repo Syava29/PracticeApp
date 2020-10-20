@@ -17,14 +17,19 @@ class Window5:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.root.config(bg="#1f4b99")
-        img = PilImage.open('addimg.png')
+
+        img = PilImage.open('images/add_png.png')
         img = img.resize((18, 18), PilImage.ANTIALIAS)
         self.photo_image = ImageTk.PhotoImage(img)
 
-        if icon:
-            self.root.iconbitmap(icon)
+        img3 = PilImage.open('images/help_png.png')
+        img3 = img3.resize((18, 18), PilImage.ANTIALIAS)
+        self.photo_image3 = ImageTk.PhotoImage(img3)
 
-        self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3, text="Структура дисциплины и распределение её трудоёмкости")
+        self.root.iconbitmap('images/osu2.ico')
+
+        self.frm_form = LabelFrame(self.root, relief=SUNKEN, borderwidth=3,
+                                   text="Структура дисциплины и распределение её трудоёмкости")
         self.frm_form.pack(fill=X, ipadx=30, ipady=30, padx=10)
         self.text_edit = ScrolledText(self.frm_form, width=78, height=25, font=("Times New Roman", 11), wrap=WORD)
         self.text_edit.grid(row=1, column=1)
@@ -39,6 +44,9 @@ class Window5:
         self.btn_clear = Button(self.frm_buttons, text="Отчистить", command=self.delete_text)
         self.btn_clear.pack(side=LEFT, padx=10, ipadx=10)
 
+        self.btn_help = Button(self.frm_buttons, image=self.photo_image3, command=self.help_mb)
+        self.btn_help.pack(side=LEFT, padx=10, ipadx=10)
+
     def get_text(self):
         text_get = self.text_edit.get("1.0", END)
         doc = DocxTemplate("RPD2.docx")
@@ -50,8 +58,12 @@ class Window5:
         full_text = []
         for para in document.paragraphs:
             full_text.append(para.text)
-        mb.showinfo("Внимание", "Титульный лист сформирован")
+        mb.showinfo("Внимание", "Титульный лист рабочей программы сформирован")
         # self.mainText.insert('1.0', full_text)
 
     def delete_text(self):
         self.text_edit.delete(1.0, END)
+
+    def help_mb(self):
+        mb.showinfo("Помощь", "Укажите год набора, направление подготовки, профиль и наименование дисциплины. "
+                              "Ниже показаны все добавленные вами рабочие программы")
