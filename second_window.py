@@ -77,7 +77,10 @@ class SecondWindow:
         # stype_ed_prog_get = self.combobox_ed_prog.get()
         doc = DocxTemplate("data/RPD1.docx")
         context = {'target': text_get, 'task': text_get2, 'mesto_discip': "{{mesto_discip}}", 'description1': "{{description1}}", 'kod_komp1': "{{kod_komp1}}",
-                   'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}"}
+                   'description2': "{{description2}}", 'kod_komp2': "{{kod_komp2}}",
+                   'zuv1_1': "{{zuv1_1}}", 'zuv1_2': "{{zuv1_2}}", 'zuv1_3': "{{zuv1_3}}",
+                   'zuv2_1': "{{zuv2_1}}", 'zuv2_2': "{{zuv2_2}}", 'zuv2_3': "{{zuv2_3}}"
+                   }
         doc.render(context)
         doc.save("data/RPD2.docx")
         mb.showinfo("Внимание", "Титульный лист сформирован")

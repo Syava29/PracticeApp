@@ -46,7 +46,11 @@ class Window4:
             'УК-2',
             'УК-3',
             'УК-4',
-            'УК-5'])
+            'УК-5',
+            'УК-1',
+            'УК-6','УК-7','УК-8','УК-9','ОПК-1','ОПК-2','ОПК-3','ОПК-4','ПК-1','ПК-2','ПК-3','ПК-4','ПК-5','ПК-6','ПК-7','ПК-8',
+            'ПК-9','ПК-10','ПК-11','ПК-12','ПК-13','ПК-14',
+            'ПК-15','ПК-16','ПК-20','ПК-21','ПК-22','ПК-23','ПК-24'])
         self.combobox.pack()
 
         self.frm_buttons = Frame(self.root)
@@ -89,6 +93,14 @@ class Window4:
         self.add_kod_zuv_spisok = []
         self.add_zuv_spisok = []
 
+        self.spisok_z = []
+        self.spisok_u = []
+        self.spisok_v = []
+
+        self.zuv1 = []
+        self.zuv2 = []
+        self.zuv3 = []
+
         self.wb = load_workbook(self.filename1)
         self.sheet = self.wb['Лист1']
         self.parcing()
@@ -108,6 +120,27 @@ class Window4:
                 your_string = string
             self.description_zuv.append(your_string)
 
+        for row in self.sheet['C1':'C5']:
+            string = ''
+            for cell in row:
+                string = string + str(cell.value)
+                your_string = string
+            self.zuv1.append(your_string)
+
+        for row in self.sheet['D1':'D5']:
+            string = ''
+            for cell in row:
+                string = string + str(cell.value)
+                your_string = string
+            self.zuv2.append(your_string)
+
+        for row in self.sheet['E1':'E5']:
+            string = ''
+            for cell in row:
+                string = string + str(cell.value)
+                your_string = string
+            self.zuv3.append(your_string)
+
         # self.text_edit.insert(1.0, self.description_zuv)
         # print(self.description_zuv[0])
 
@@ -122,14 +155,17 @@ class Window4:
 
         self.add_kod_zuv_spisok.append(self.combobox.get())
         self.add_zuv_spisok.append(self.description_zuv[self.combobox.current()])
-
+        self.spisok_z.append(self.zuv1[self.combobox.current()])
+        self.spisok_u.append(self.zuv2[self.combobox.current()])
+        self.spisok_v.append(self.zuv3[self.combobox.current()])
     def save_zuv(self):
         doc = DocxTemplate("data/RPD3.docx")
 
         context = {'description1': self.add_zuv_spisok[0], 'kod_komp1': self.add_kod_zuv_spisok[0],
-                   'description2': self.add_zuv_spisok[1], 'kod_komp2': self.add_kod_zuv_spisok[1]}
-        #context = {'description1': self.description_zuv[self.combobox.current()],
-         #          'kod_komp1': self.spisok_kod[self.combobox.current()]}
+                   'description2': self.add_zuv_spisok[1], 'kod_komp2': self.add_kod_zuv_spisok[1],
+                   'zuv1_1': self.spisok_z[0], 'zuv1_2': self.spisok_u[0], 'zuv1_3': self.spisok_v[0],
+                   'zuv2_1': self.spisok_z[1], 'zuv2_2': self.spisok_u[0], 'zuv2_3': self.spisok_v[0]
+                   }
         doc.render(context)
         doc.save("готовые программы/рабочая программа.docx")
         mb.showinfo("Внимание", "Планируемые результаты обучения сформированы")
