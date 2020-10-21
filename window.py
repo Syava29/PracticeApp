@@ -7,6 +7,7 @@ from tkinter.ttk import Frame, Button
 from PIL import Image as PilImage
 from PIL import ImageTk
 from tkinter.scrolledtext import ScrolledText
+import sqlite3
 import os
 
 import docx as dc
@@ -44,6 +45,10 @@ class MainWindow:
         self.data_file = open("data/data1.txt", "w+")
         self.text_data = self.data_file.read()
         self.data_file.close()
+
+        # connect к БД
+        self.conn = sqlite3.connect('data/db_data.db')
+        self.cur = self.conn.cursor()
 
         self.counter1 = 0
 
@@ -109,36 +114,40 @@ class MainWindow:
         self.label_4.grid(row=5, column=0, sticky="e")
         self.label_5.grid(row=6, column=0, sticky="e")
 
-        self.entry.grid(row=1, column=1)
+        self.entry.grid(row=1, column=1, pady=10)
         # entry_1.grid(row=2, column=1)
         # entry_2.grid(row=3, column=1)
         # entry_3.grid(row=4, column=1)
         # self.entry_4.grid(row=5, column=1)
         # self.entry_5.grid(row=6, column=1)
 
-        self.combobox_discip = ttk.Combobox(self.frm_form, values=[
+        self.button_authorization = Button(self.frm_form, text='Вход', width=5, command=self.authorization).grid(row=1,
+                                                                                                                 column=3)
+
+        self.combobox_discip = ttk.Combobox(self.frm_form, width=50, values=[
             "Программирование",
             "Философия",
             "Эконометрика",
-            "Иностранный язык"])
-        self.combobox_discip.grid(row=2, column=1)
+            "Иностранный язык"], )
+        self.combobox_discip.grid(row=2, column=1, pady=10)
 
-        self.combobox_ed_prog = ttk.Combobox(self.frm_form, values=[
+        self.combobox_ed_prog = ttk.Combobox(self.frm_form, width=50, values=[
             "бакалавриат",
             "специалитет, магистратура"])
-        self.combobox_ed_prog.grid(row=3, column=1)
+        self.combobox_ed_prog.grid(row=3, column=1, pady=10)
 
-        self.combobox_form_ed = ttk.Combobox(self.frm_form, values=[
+        self.combobox_form_ed = ttk.Combobox(self.frm_form, width=50, values=[
             "очная",
             "очно-заочная",
             "заочная"])
-        self.combobox_form_ed.grid(row=4, column=1)
+        self.combobox_form_ed.grid(row=4, column=1, pady=10)
 
-        self.combobox_naprav_podgotovki = ttk.Combobox(self.frm_form, values=["09.03.03 Прикладная информатика"])
-        self.combobox_naprav_podgotovki.grid(row=5, column=1)
+        self.combobox_naprav_podgotovki = ttk.Combobox(self.frm_form, width=50,
+                                                       values=["09.03.03 Прикладная информатика"])
+        self.combobox_naprav_podgotovki.grid(row=5, column=1, pady=10)
 
-        self.combobox_profil = ttk.Combobox(self.frm_form, values=["Интеллектуальная обработка данных"])
-        self.combobox_profil.grid(row=6, column=1)
+        self.combobox_profil = ttk.Combobox(self.frm_form, width=50, values=["Интеллектуальная обработка данных"])
+        self.combobox_profil.grid(row=6, column=1, pady=10)
 
         # основные кнопки
         self.frm_buttons = Frame()
@@ -177,7 +186,8 @@ class MainWindow:
         self.entry_add_programm4 = Entry(self.frm_form2, width=50)
         self.entry_add_programm4.grid(row=4, column=1, pady=10, padx=10)
 
-        self.btn_add_programm1 = Button(self.frm_form2, image=self.photo_image2, command=self.open_word_file).grid(row=1, column=2)
+        self.btn_add_programm1 = Button(self.frm_form2, image=self.photo_image2, command=self.open_word_file).grid(
+            row=1, column=2)
         self.btn_add_programm2 = Button(self.frm_form2, image=self.photo_image2).grid(row=2, column=2)
         self.btn_add_programm3 = Button(self.frm_form2, image=self.photo_image2).grid(row=3, column=2)
         self.btn_add_programm4 = Button(self.frm_form2, image=self.photo_image2).grid(row=4, column=2)
@@ -204,16 +214,20 @@ class MainWindow:
         self.label.pack(anchor=CENTER)
         # self.menubar
 
-    def create_new_win(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
+    def create_new_win(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False),
+                       icon=None):
         SecondWindow(self.root, width, height, title, resizable, icon)
 
-    def create_new_win2(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
+    def create_new_win2(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False),
+                        icon=None):
         Window3(self.root, width, height, title, resizable, icon)
 
-    def create_new_win4(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
+    def create_new_win4(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False),
+                        icon=None):
         Window4(self.root, width, height, title, resizable, icon)
 
-    def create_new_win5(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False), icon=None):
+    def create_new_win5(self, width, height, title="Генератор рабочей программы дисциплины", resizable=(False, False),
+                        icon=None):
         Window5(self.root, width, height, title, resizable, icon)
 
     def on_open(self):
@@ -269,7 +283,46 @@ class MainWindow:
                               "Ниже показаны все добавленные вами рабочие программы")
 
     def open_word_file(self):
-        os.startfile('готовые программы/рабочая программа.docx')
+        os.startfile(r'готовые программы\рабочая программа.docx')
+
+    def authorization(self):
+        i = 0
+        k = 0
+        flag = False
+        input_text = self.entry.get()
+
+        self.cur.execute(f'SELECT fio_prepod FROM prepod')
+        all_results2 = self.cur.fetchall()
+
+        while k < len(all_results2):
+            string_test = all_results2[k]
+
+            if input_text == string_test[0]:
+                self.entry.delete(0, END)
+                self.entry.insert(0, string_test[0])
+
+                self.cur.execute(f'SELECT discip FROM discip WHERE id_prepod == {k+1}')
+                all_results = self.cur.fetchall()
+
+                while i < len(all_results):
+                    self.combobox_discip["values"] = all_results
+                    i += 1
+                self.combobox_profil.insert(0, len(all_results))
+
+                mb.showinfo("Успешно", "Вход выполнен успешно")
+                flag = True
+
+            k += 1
+        if not flag:
+            mb.showerror('Вход не выполнен', 'Такого преподавателя нет')
+
+        self.cur.execute(f'SELECT discip FROM discip WHERE id_prepod == {4}')
+        all_results = self.cur.fetchall()
+
+        while i < len(all_results):
+            self.combobox_discip["values"] = all_results
+            i += 1
+        self.combobox_profil.insert(0, len(all_results))
 
 
 if __name__ == "__main__":
