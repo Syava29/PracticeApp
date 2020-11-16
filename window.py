@@ -344,5 +344,5 @@ class MainWindow:
 
 
 if __name__ == "__main__":
-    window = MainWindow(600, 600, "Генератор рабочей программы дисциплины")
+    window = MainWindow(600, 700, "Генератор рабочей программы дисциплины")
     window.run()
